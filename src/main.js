@@ -14,18 +14,23 @@ import {
   Input,
   FormItem,
   Row,
+  Message,
+  Aside,
 } from 'element-ui';
 // 导入全局样式
 import 'element-ui/lib/theme-chalk/index.css';
+import VueRouter from 'vue-router';
 
 // 把axios绑定到原型
 Vue.prototype.$axios = axios
+Vue.prototype.$message = Message;
 // 配置axios的基准路径
 axios.defaults.baseURL = "http://localhost:3000"
 
 Vue.config.productionTip = false
 
 //注册element ui的组件
+Vue.use(Aside)
 Vue.use(Row)
 Vue.use(FormItem)
 Vue.use(Form)
