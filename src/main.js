@@ -16,6 +16,10 @@ import {
   Row,
   Message,
   Aside,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+
 } from 'element-ui';
 // 导入全局样式
 import 'element-ui/lib/theme-chalk/index.css';
@@ -30,6 +34,9 @@ axios.defaults.baseURL = "http://localhost:3000"
 Vue.config.productionTip = false
 
 //注册element ui的组件
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
+Vue.use(Dropdown)
 Vue.use(Aside)
 Vue.use(Row)
 Vue.use(FormItem)
