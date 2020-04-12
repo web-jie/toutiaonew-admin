@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+// 导入axios组件
+import axios from 'axios'
 // 引入element 插件
 import {
   Button,
@@ -16,6 +18,10 @@ import {
 // 导入全局样式
 import 'element-ui/lib/theme-chalk/index.css';
 
+// 把axios绑定到原型
+Vue.prototype.$axios = axios
+// 配置axios的基准路径
+axios.defaults.baseURL = "http://localhost:3000"
 
 Vue.config.productionTip = false
 

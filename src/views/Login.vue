@@ -5,10 +5,10 @@
         <img src="../assets/logo.png" alt />
       </div>
       <el-form ref="form" class="form" :model="form" label-width="0px">
-        <el-form-item >
-          <el-input   prefix-icon="el-icon-user" v-model="form.username"></el-input>
+        <el-form-item>
+          <el-input prefix-icon="el-icon-user" v-model="form.username"></el-input>
         </el-form-item>
-        <el-form-item >
+        <el-form-item>
           <el-input prefix-icon="el-icon-lock" type="password" v-model="form.password"></el-input>
         </el-form-item>
         <el-row class="btns">
@@ -27,12 +27,61 @@ export default {
       form: {
         username: "",
         password: ""
+      },
+      // 表单的验证规则
+      // required: 表示必填
+      // message: 错误时候提示
+      // trigger 什么时候触发验证
+      rules: {
+        username: [
+          {
+            required: true,
+            message: "请输入手机号码",
+            trigger: "blur"
+          },
+          {
+            min: 11,
+            max: 11,
+            message: "手机号码格式错误",
+            trigger: "blur"
+          }
+        ],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       }
     };
   },
   methods: {
-    onSubmit(){
-
+    onSubmit() {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          // 提交表单登录
+          this.$axios({
+            url: "/login",
+            method: "POST",
+            data: this.form
+          }).then(res => {
+            // data是用户的数据，里面包含了token和user的详细信息
+            const { data } = res.data;
+            // 判断当前用户是否有权限
+            if (data.user.role.type !== "admin") {
+              this.$message({
+                message: "当前用户没有权限,必须是管理员",
+                type: "warning"
+              });
+              return;
+            }
+            // 转换成字符串
+            const userStr = JSON.stringify(data);
+            // 保存到本地，可以给其他的组件使用
+            localStorage.setItem("userInfo", userStr);
+            // 登录成功的提示
+            this.$message({
+              message: "登录成功",
+              type: "success"
+            });
+          });
+        }
+      });
     }
   }
 };
@@ -69,7 +118,7 @@ export default {
         height: 100%;
       }
     }
-    .form{
+    .form {
       width: 100%;
       padding: 0 20px;
       box-sizing: border-box;
@@ -78,9 +127,9 @@ export default {
       padding-bottom: 40px;
     }
   }
-.btns{
-  display: flex;
-  justify-content: flex-end;
-}
+  .btns {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 </style>
