@@ -25,8 +25,8 @@ export default {
   data() {
     return {
       form: {
-        username: "",
-        password: ""
+        username: "13800138000",
+        password: "123"
       },
       // 表单的验证规则
       // required: 表示必填
