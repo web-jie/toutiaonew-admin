@@ -28,6 +28,7 @@
     <!-- 分页组件 -->
     <!-- size-change: 分页条数切换时候触发的事件 -->
     <!-- current-change: 页数切换触发的事件 -->
+
     <!-- current-page: 当前页数 -->
     <!-- page-size：当前显示的条数 -->
     <!-- total: 总条数 -->
@@ -79,44 +80,43 @@ export default {
       });
     },
     handleSizeChange(val) {
-      // 修改条数
       this.pageSize = val;
       // 重新请求接口
       this.getList();
-    }
-  },
-  handleCurrentChange(val) {
-    // 修改页数
-    this.pageIndex = val;
-    // 重新请求接口
-    this.getList();
-  },
-  // 删除的事件， item是当前点击的文章数据对象
-  handleDelete(item) {
-    const { token } = JSON.parse(localStorage.getItem("userInfo"));
-    this.$confirm("此操作将永久删除该文章, 是否继续?", "提示", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
-      type: "warning"
-    }).then(() => {
-      // 发起编辑的接口
-      this.$axios({
-        url: "/post_update/" + item.id,
-        method: "POST",
-        data: {
-          open: 0 // 表示关闭文章
-        },
-        headers: {
-          Authorization: token
-        }
-      }).then(res => {
-        const { message } = res.data;
-        // 提示用户编辑成功
-        this.$message.success(message);
-        // 重新请求当前的数据
-        this.getList();
+    },
+    handleCurrentChange(val) {
+      // 修改页数
+      this.pageIndex = val;
+      // 重新请求接口
+      this.getList();
+    },
+    // 删除的事件， item是当前点击的文章数据对象
+    handleDelete(item) {
+      const { token } = JSON.parse(localStorage.getItem("userInfo"));
+      this.$confirm("此操作将永久删除该文章, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        // 发起编辑的接口
+        this.$axios({
+          url: "/post_update/" + item.id,
+          method: "POST",
+          data: {
+            open: 0 // 表示关闭文章
+          },
+          headers: {
+            Authorization: token
+          }
+        }).then(res => {
+          const { message } = res.data;
+          // 提示用户编辑成功
+          this.$message.success(message);
+          // 重新请求当前的数据
+          this.getList();
+        });
       });
-    });
+    }
   }
 };
 </script>

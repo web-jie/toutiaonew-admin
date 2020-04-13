@@ -10,16 +10,16 @@
       里面的特殊资源-->
       <el-form-item label="类型">
         <el-radio-group v-model="form.type">
-          <el-radio label="文章"></el-radio>
-          <el-radio label="视频"></el-radio>
+          <el-radio :label="1">文章</el-radio>
+          <el-radio :label="2">视频</el-radio>
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item label="内容" class="editor">
+      <el-form-item v-if="form.type === 1" label="内容" class="editor">
         <vue-editor v-model="form.content"></vue-editor>
       </el-form-item>
 
-      <el-form-item label="视频">
+      <el-form-item v-if="form.type === 2" label="视频">
         <!-- action：上传链接 -->
         <!-- limit：限制上传文件的数量 -->
         <!-- on-remove：移除文件的事件 -->

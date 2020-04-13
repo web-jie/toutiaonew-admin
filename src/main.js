@@ -23,7 +23,14 @@ import {
   MenuItem,
   Submenu,
   Table,
-  TableColumn
+  TableColumn,
+  Pagination,
+  Radio,
+  RadioGroup,
+  Upload,
+  CheckboxGroup,
+  Checkbox,
+  Dialog,
 } from 'element-ui';
 // 导入全局样式
 import 'element-ui/lib/theme-chalk/index.css';
@@ -39,6 +46,13 @@ Vue.config.productionTip = false
 
 
 //注册element ui的组件
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
+Vue.use(Dialog)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(Upload)
+Vue.use(Pagination)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Submenu)
