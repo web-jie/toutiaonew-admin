@@ -22,6 +22,8 @@ import {
   Menu,
   MenuItem,
   Submenu,
+  Table,
+  TableColumn
 } from 'element-ui';
 // 导入全局样式
 import 'element-ui/lib/theme-chalk/index.css';
@@ -37,6 +39,8 @@ Vue.config.productionTip = false
 
 
 //注册element ui的组件
+Vue.use(Table)
+Vue.use(TableColumn)
 Vue.use(Submenu)
 Vue.use(MenuItem)
 Vue.use(Menu)
