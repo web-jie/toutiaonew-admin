@@ -35,12 +35,10 @@ export default {
 .el-aside {
   background-color: #0c1c2c;
   color: #333;
-  text-align: center;
 }
 .el-main {
   background-color: #e9eef3;
   color: #333;
-  text-align: center;
 }
 // 把最外层的el-container设置为100vh
 #app > .el-container {

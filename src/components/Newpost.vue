@@ -35,11 +35,8 @@
 
       <!-- 多选框 -->
       <el-form-item label="栏目">
-        <el-checkbox-group v-model="form.category">
-          <el-checkbox label="A" name="type"></el-checkbox>
-          <el-checkbox label="B" name="type"></el-checkbox>
-          <el-checkbox label="C" name="type"></el-checkbox>
-          <el-checkbox label="D" name="type"></el-checkbox>
+        <el-checkbox-group v-model="form.categories">
+          <el-checkbox :label="item.id" name="type" v-for="(item,index) in menus" :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
 
@@ -82,15 +79,33 @@ export default {
         title: "",
         type: 1,
         content: "<h1>Some initial content</h1>",
-        category: []
+        category: [],
+        //栏目id的集合
+        categories: [],
+        // 封装图片id的集合
+        cover: []
       },
       // 图片预览要使用的属性
       dialogImageUrl: "",
-      dialogVisible: false
+      dialogVisible: false,
+      // 栏目列表
+      menus: []
     };
   },
   components: {
     VueEditor
+  },
+  mounted(){
+    // 请求栏目数据
+    this.$axios({
+      url: "/category"
+    }).then(res=>{
+      const {data} = res.data
+      // 删除头条
+      data.splice(0,1);
+      // 保存到menus
+      this.menus = data
+    })
   },
   methods: {
     // 视频移除的事件
