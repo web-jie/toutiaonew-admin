@@ -16,7 +16,12 @@
       </el-form-item>
 
       <el-form-item v-if="form.type === 1" label="内容" class="editor">
-        <vue-editor v-model="form.content"></vue-editor>
+        <vue-editor
+          id="editor"
+          v-model="form.content"
+          useCustomImageHandler
+          @image-added="handleImageAdded"
+        ></vue-editor>
       </el-form-item>
 
       <el-form-item v-if="form.type === 2" label="视频">
@@ -177,6 +182,35 @@ export default {
       // 把当前的图片列表赋值给data
       this.fileList = fileList;
     },
+    // 富文本编辑的上传图片的事件
+    handleImageAdded: function(file, Editor, cursorLocation, resetUploader) {
+      var formData = new FormData();
+      // 参数"file"是接口需要的属性
+      formData.append("file", file);
+      this.$axios({
+        url: "/upload",
+        method: "POST",
+        data: formData,
+        headers: {
+          Authorization: this.token
+        }
+      })
+        .then(result => {
+          // 回显到页面的编辑器中
+          let url = result.data.data.url; // Get url from response
+          // 往编辑中插入刚刚上传成功的图片，第一个参数是编辑器获得焦点的地方，
+          Editor.insertEmbed(
+            cursorLocation,
+            "image",
+            this.$axios.defaults.baseURL + url
+          );
+          resetUploader();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
     // 发布文章的点击事件
     onSubmit() {
       // 转换下栏目的id数据格式
