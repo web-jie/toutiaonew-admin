@@ -36,7 +36,12 @@
       <!-- 多选框 -->
       <el-form-item label="栏目">
         <el-checkbox-group v-model="form.categories">
-          <el-checkbox :label="item.id" name="type" v-for="(item,index) in menus" :key="index">{{item.name}}</el-checkbox>
+          <el-checkbox
+            :label="item.id"
+            name="type"
+            v-for="(item,index) in menus"
+            :key="index"
+          >{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
 
@@ -45,12 +50,17 @@
         <!-- action:  上传图片的地址
 				list-type: 图片上传组件使用图片列表布局
 				handlePictureCardPreview: 图片预览的事件
-        handleRemove：移除图片的事件-->
+        handleRemove：移除图片的事件
+        on-success: 图片上传成功后的回调函数-->
         <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
+          :action="$axios.defaults.baseURL + '/upload'"
           list-type="picture-card"
           :on-preview="handlePictureCardPreview"
           :on-remove="handleImageRemove"
+          :headers="{
+                        Authorization: token
+                    }"
+          :on-success="handleImageSuccess"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -89,24 +99,28 @@ export default {
       dialogImageUrl: "",
       dialogVisible: false,
       // 栏目列表
-      menus: []
+      menus: [],
+      token: ""
     };
   },
   components: {
     VueEditor
   },
-  mounted(){
+  mounted() {
+    const { token } = JSON.parse(localStorage.getItem("userInfo"));
+    this.token = token;
     // 请求栏目数据
     this.$axios({
       url: "/category"
-    }).then(res=>{
-      const {data} = res.data
+    }).then(res => {
+      const { data } = res.data;
       // 删除头条
-      data.splice(0,1);
+      data.splice(0, 1);
       // 保存到menus
-      this.menus = data
-    })
+      this.menus = data;
+    });
   },
+
   methods: {
     // 视频移除的事件
     handleRemove(file, fileList) {
@@ -121,9 +135,19 @@ export default {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
+    // 图片上传成功后的事件
+    handleImageSuccess(response, file, fileList) {
+      console.log(response);
+    },
     // 发布文章的点击事件
     onSubmit() {
-      console.log("submit");
+      // 转换下栏目的id数据格式
+      this.form.categories = this.form.categories.map(v => {
+        return {
+          id: v
+        };
+      });
+      console.log(this.form);
     }
   }
 };
