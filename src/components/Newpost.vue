@@ -88,7 +88,7 @@ export default {
       form: {
         title: "",
         type: 1,
-        content: "<h1>Some initial content</h1>",
+        content: "",
         category: [],
         //栏目id的集合
         categories: [],
@@ -104,6 +104,36 @@ export default {
       // 图片上传的列表
       fileList: []
     };
+    // 验证表单数据
+    if (this.form.title.trim() === "") {
+      this.$message.warning("标题不能为空");
+      return;
+    }
+    if (this.form.content.trim() === "") {
+      this.$message.warning("内容不能为空");
+      return;
+    }
+    if (this.form.categories.length === 0) {
+      this.$message.warning("栏目不能为空");
+      return;
+    }
+    if (this.form.cover.length === 0) {
+      this.$message.warning("封面不能为空");
+      return;
+    }
+    // 发布普通的文章
+    this.$axios({
+      url: "/post",
+      method: "POST",
+      data: this.form,
+      headers: {
+        Authorization: this.token
+      }
+    }).then(res => {
+      const { message } = res.data;
+      // 弹窗提示
+      this.$message.success(message);
+    });
   },
   components: {
     VueEditor
