@@ -11,7 +11,8 @@ const routes = [
     redirect: "post-list",
     children: [
       {path: 'post-list',component: ()=>import ("@/components/PostList")},
-      {path: "new-post", component: ()=>import("@/components/Newpost")}
+      {path: "new-post", component: ()=>import("@/components/Newpost")},
+      {path: "edit-post/:id", component: ()=>import("@/views/EditPost.vue")}
     ]
   },
   {
