@@ -60,7 +60,8 @@
 				list-type: 图片上传组件使用图片列表布局
 				handlePictureCardPreview: 图片预览的事件
         handleRemove：移除图片的事件
-        on-success: 图片上传成功后的回调函数-->
+        on-success: 图片上传成功后的回调函数
+        file-list：上传的图片列表-->
         <el-upload
           :action="$axios.defaults.baseURL + '/upload'"
           list-type="picture-card"
@@ -70,6 +71,7 @@
                         Authorization: token
                     }"
           :on-success="handleImageSuccess"
+          :file-list="fileList"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -148,7 +150,7 @@ export default {
 
     // 发布普通的文章
     this.$axios({
-      url: "/post",
+      url:"/post_update/" + this.$route.params.id,
       method: "POST",
       data: this.form,
       headers: {
@@ -159,7 +161,7 @@ export default {
       // 弹窗提示
       this.$message.success(message);
       // 返回文章列表
-      this.$router.replace("/post-list")
+      this.$router.replace("/post-list");
     });
   },
   components: {
@@ -177,6 +179,26 @@ export default {
       data.splice(0, 1);
       // 保存到menus
       this.menus = data;
+    });
+    // 获取url地址栏的动态id
+    const { id } = this.$route.params;
+    // 请求当前文章的数据
+    this.$axios({
+      url: "/post/" + id
+    }).then(res => {
+      const { data } = res.data;
+      // 还原数据
+      this.form.title = data.title;
+      this.form.type = data.type;
+      this.form.content = data.content;
+      this.form.categories = data.categories.map(v => {
+        return v.id;
+      });
+      // 封面图片的回显
+      this.fileList = data.cover.map(v => {
+        v.url = this.$axios.defaults.baseURL + v.url;
+        return v;
+      });
     });
   },
 
@@ -238,7 +260,7 @@ export default {
         });
     },
 
-    // 发布文章的点击事件
+    // 确定编辑文章的点击事件
     onSubmit() {
       // 转换下栏目的id数据格式
       this.form.categories = this.form.categories.map(v => {
@@ -249,7 +271,8 @@ export default {
       // 封面图片
       this.form.cover = this.fileList.map(v => {
         return {
-          id: v.response.data.id
+          // v.id是运来旧图片的数据，v.response.data.id新上传的图片的id
+          id: v.id || v.response.data.id
         };
       });
     }
