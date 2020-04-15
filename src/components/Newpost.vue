@@ -113,23 +113,55 @@ export default {
       // 图片上传的列表
       fileList: []
     };
-    // 验证表单数据
-    if (this.form.title.trim() === "") {
-      this.$message.warning("标题不能为空");
-      return;
-    }
-    if (this.form.content.trim() === "") {
-      this.$message.warning("内容不能为空");
-      return;
-    }
-    if (this.form.categories.length === 0) {
-      this.$message.warning("栏目不能为空");
-      return;
-    }
-    if (this.form.cover.length === 0) {
-      this.$message.warning("封面不能为空");
-      return;
-    }
+    // // 验证表单数据
+    // if (this.form.title.trim() === "") {
+    //   this.$message.warning("标题不能为空");
+    //   return;
+    // }
+    // if (this.form.content.trim() === "") {
+    //   this.$message.warning("内容不能为空");
+    //   return;
+    // }
+    // if (this.form.categories.length === 0) {
+    //   this.$message.warning("栏目不能为空");
+    //   return;
+    // }
+    // if (this.form.cover.length === 0) {
+    //   this.$message.warning("封面不能为空");
+    //   return;
+    // }
+    // 表单验证的第二种写法
+    const rules = [
+      {
+        value: this.form.title.trim() === "",
+        message: "标题不能为空"
+      },
+      {
+        value: this.form.content.trim() === "",
+        message: "内容不能为空"
+      },
+      {
+        value: this.form.categories.length === 0,
+        message: "栏目不能为空"
+      },
+      {
+        value: this.form.cover.length === 0,
+        message: "封面不能为空"
+      }
+    ];
+    // 先假设所有都是正确的
+    let isvalid = true;
+    rules.forEach(v => {
+      if (!isvalid) return;
+      if (v.value === true) {
+        // 提示
+        this.$message.warning(v.message);
+        // 把通过的状态该为false
+        isvalid = false;
+      }
+    });
+    if (!isvalid) return;
+
     // 发布普通的文章
     this.$axios({
       url: "/post",
@@ -142,6 +174,8 @@ export default {
       const { message } = res.data;
       // 弹窗提示
       this.$message.success(message);
+      // 返回文章列表
+      this.$router.replace("/post-list")
     });
   },
   components: {

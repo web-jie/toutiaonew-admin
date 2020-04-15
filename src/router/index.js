@@ -7,6 +7,8 @@ const routes = [
   {
     path: '/',
     component: () => import("@/views/Index.vue"),
+    // 重定向
+    redirect: "post-list",
     children: [
       {path: 'post-list',component: ()=>import ("@/components/PostList")},
       {path: "new-post", component: ()=>import("@/components/Newpost")}
